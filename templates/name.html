@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Name{% endblock %}
+
+{% block content %}
+
+    {% for message in get_flashed_messages() %}
+       Hey {{ name }}, {{ message }}
+    {% endfor %}
+
+    {% if name %}
+        <h1>Hello {{ name }}</h1>
+        <p>Here's a bike: </p>
+        <img src="{{ url_for('static', filename='img/bike.jpeg') }}" alt="bike">
+        <br />
+        <a href="{{ url_for('name') }} ">go back</a>
+    {% else %}
+        <h1>What's Your Name?</h1>
+        <br />
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {{ form.name.label}}
+            {{ form.name() }}
+            {{ form.submit() }}
+        </form>
+    {% endif %}
+
+{% endblock %}

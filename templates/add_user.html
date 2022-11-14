@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Add User{% endblock %}
+
+{% block content %}
+
+    {% for message in get_flashed_messages() %}
+    {{ message }}
+    {% endfor %}
+
+    {% if name %}
+        <h1>User List</h1>
+        {% for user in our_users %}
+            {{ user.id}}. {{ user.name}} - {{ user.email }}
+            <br />
+        {% endfor %}
+    {% else %}
+        <h1>User List</h1>
+        <br />
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {{ form.name.label}}
+            {{ form.name() }}
+            {{ form.email.label}}
+            {{ form.email() }}
+            {{ form.submit() }}
+        </form>
+        <hr />
+        {% for user in our_users %}
+            {{ user.id}}. {{ user.name}} - {{ user.email }}
+            <br />
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

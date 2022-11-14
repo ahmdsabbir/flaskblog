@@ -1,0 +1,27 @@
+body > header {
+    grid-area: h;
+}
+body > main {
+    grid-area: m;
+}
+
+body > aside {
+    grid-area: a;
+}
+body > footer {
+    grid-area: f;
+}
+body {
+    display: grid;
+    grid-template-areas:
+    "h h h h h h h"
+    ". m m m a a ."
+    "f f f f f f f"
+    ;
+    grid-gap: 1rem;
+    background-color: rgb(238, 243, 248);
+}
+body > * {
+    padding: 1rem;
+    background-color: rgb(246, 248, 250);
+}
