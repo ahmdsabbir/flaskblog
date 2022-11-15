@@ -143,5 +143,35 @@ def name():
         flash('Form submitted successfully')
     return render_template('name.html', name=name, form=form)
 
+
+class PasswordForm(FlaskForm):
+    email = StringField('email', validators=[DataRequired()])
+    password_hash = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+
+
+@app.route('/test', methods=['GET', 'POST'])
+def test_pwd():
+    email = None
+    password = None
+    pw_to_check = None
+    passed = None
+    form = PasswordForm()
+    #validate
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password_hash.data
+        form.email.data=''
+        form.password_hash.data=''
+        pw_to_check = Users.query.filter_by(email=email).first()
+
+        passed = check_password_hash(pw_to_check.password_hash, password)
+
+    return render_template('test.html', email=email, password=password, form=form, pw_to_check=pw_to_check, passed=passed)
+
+
+
+# initiate
 if __name__ == "__main__":
     app.run(debug=True, port=8000)

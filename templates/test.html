@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Name{% endblock %}
+
+{% block content %}
+
+    {% for message in get_flashed_messages() %}
+       Hey {{ name }}, {{ message }}
+    {% endfor %}
+
+    {% if email %}
+        <h1>Email {{ email }}</h1>
+        <h1>password {{ password }}</h1>
+        <br />
+        <h2>test user info</h2>
+        name: {{ pw_to_check.name }} <br />
+        email: {{ pw_to_check.email }} <br />
+        password_hash: {{ pw_to_check.password_hash }} <br />
+        passed : {{ passed }}
+    {% else %}
+        <h1>What's Your email and password?</h1>
+        <br />
+    
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {{ form.email.label}}
+            {{ form.email() }}
+            {{ form.password_hash.label}}
+            {{ form.password_hash() }}
+            {{ form.submit() }}
+        </form>
+    {% endif %}
+
+{% endblock %}
