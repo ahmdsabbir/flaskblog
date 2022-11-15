@@ -1,8 +1,10 @@
-from flask import Flask, render_template, flash
+from flask import Flask, render_template, flash, request
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError
+from wtforms.validators import DataRequired, EqualTo, Length
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 
@@ -18,12 +20,26 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/our
 
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     email = db.Column(db.String(200), nullable=False, unique=True)
+    favorite_color = db.Column(db.String(120))
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    password_hash = db.Column(db.String(128))
+
+    @property
+    def password(self):
+        raise AttributeError('password is not a readable attribute')
+    
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+    
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
         return f'<Name {self.name}>'
@@ -31,9 +47,11 @@ class Users(db.Model):
 class UserForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
+    password_hash = PasswordField('Password', validators=[DataRequired(), EqualTo('password_hash_confirm', message='Passwords Must Match')])
+    password_hash_confirm = PasswordField('Cnfirm Password', validators=[DataRequired()])
+    favorite_color = StringField('Favorite Color')
     submit = SubmitField('Submit')
 
-# form class
 class NamerForm(FlaskForm):
     name = StringField('name?', validators=[DataRequired()])
     submit = SubmitField('Submit')
@@ -45,15 +63,52 @@ def add_user():
     if form.validate_on_submit():
         user = Users.query.filter_by(email=form.email.data).first()
         if user is None:
-            user = Users(name=form.name.data, email=form.email.data)
+            hashed_password = generate_password_hash(form.password_hash.data, 'sha256')
+            user = Users(name=form.name.data, email=form.email.data, password_hash=hashed_password, favorite_color=form.favorite_color.data)
             db.session.add(user)
             db.session.commit()
         name = form.name.data
         form.name.data = ''
         form.email.data = ''
+        form.password_hash.data = ''
+        form.favorite_color.data = ''
         flash('User added successfully')
     our_users = Users.query.order_by(Users.date_added)
     return render_template('add_user.html', form=form, our_users=our_users, name=name)
+
+
+@app.route('/user/update/<int:id>', methods=['GET', 'POST'])
+def update(id):
+    form = UserForm()
+    user_to_update = Users.query.get_or_404(id)
+    if request.method == 'POST':
+        user_to_update.name = request.form['name']
+        user_to_update.email = request.form['email']
+        user_to_update.favorite_color = request.form['favorite_color']
+        try:
+            db.session.commit()
+            flash('updated')
+            return render_template('update.html', form=form, user_to_update=user_to_update)
+        except:
+            flash('failed')
+            return render_template('update.html', form=form, user_to_update=user_to_update)
+    else:
+        return render_template('update.html', form=form, user_to_update=user_to_update, id=id)
+
+@app.route('/delete/<int:id>')
+def delete(id):
+    name = None
+    form = UserForm()
+    user_to_delete = Users.query.get_or_404(id)
+    try:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash('user deleted')
+        our_users = Users.query.order_by(Users.date_added)
+        return render_template('add_user.html', form=form, our_users=our_users, name=name)
+    except:
+        flash('not deleted')
+        return render_template('add_user.html', form=form, our_users=our_users, name=name)
 
 # route decorator
 @app.route('/')
