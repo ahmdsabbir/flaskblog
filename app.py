@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, EqualTo, Length
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, date
 
 
 # Flask instance
@@ -21,6 +21,19 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/our
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+
+@app.route('/date')
+def get_current_date():
+    favorite_pizza = {
+        'john': 'Pepperoni',
+        'Tim': 'Cheese',
+        'Mark': 'Mushroom',
+    }
+    return {
+        'date': date.today(),
+        'pizza': favorite_pizza,
+    }
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
