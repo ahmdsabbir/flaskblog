@@ -40,11 +40,24 @@ class PostForm(FlaskForm):
     submit = SubmitField('Post')
 
 
+@app.route('/posts')
+def posts():
+    posts = Posts.query.order_by('date_posted')
+    return render_template('posts.html', posts=posts)
+
+@app.route('/post/<slug>')
+def post_detail(slug):
+    print(slug, flush=True)
+    post = Posts.query.filter_by(slug=slug).first()
+    
+    return render_template('detail_post.html', post=post)
+
 @app.route('/add-post', methods=['GET', 'POST'])
 def add_post():
     form = PostForm()
 
     if form.validate_on_submit():
+        
         post = Posts(title=form.title.data, content=form.content.data, author=form.author.data, slug=form.slug.data)
         
         # clear the form
