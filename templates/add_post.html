@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Add User{% endblock %}
+
+{% block content %}
+
+    {% for message in get_flashed_messages() %}
+        {{ message }}
+    {% endfor %}
+
+    
+        <h1>Create Post</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {{ form.title.label}}
+            {{ form.title() }}
+            <br /><br />
+            {{ form.author.label}}
+            {{ form.author() }}
+            <br /><br />
+            {{ form.slug.label}}
+            {{ form.slug() }}
+            <br /><br />
+            {{ form.content.label}}
+            {{ form.content(rows="5") }}
+            <br /><br />
+            {{ form.submit() }}
+        </form>
+        <hr />
+
+{% endblock %}

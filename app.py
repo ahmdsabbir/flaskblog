@@ -1,6 +1,6 @@
 from flask import Flask, render_template, flash, request
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError, TextAreaField
 from wtforms.validators import DataRequired, EqualTo, Length
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -22,6 +22,44 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/our
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+
+# Blog Post Model
+class Posts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    content = db.Column(db.Text)
+    author = db.Column(db.String(255))
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    slug = db.Column(db.String(255))
+
+class PostForm(FlaskForm):
+    title = StringField('Ttle', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    author = StringField('Author', validators=[DataRequired()])
+    slug = StringField('slug', validators=[DataRequired()])
+    submit = SubmitField('Post')
+
+
+@app.route('/add-post', methods=['GET', 'POST'])
+def add_post():
+    form = PostForm()
+
+    if form.validate_on_submit():
+        post = Posts(title=form.title.data, content=form.content.data, author=form.author.data, slug=form.slug.data)
+        
+        # clear the form
+        form.title.data = ''
+        form.content.data = ''
+        form.author.data = ''
+        form.slug.data = ''
+
+        # save to db
+        db.session.add(post)
+        db.session.commit()
+        flash('Blog post submitted')
+
+    # redirect
+    return render_template('add_post.html', form=form)
 
 @app.route('/date')
 def get_current_date():
