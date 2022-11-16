@@ -45,12 +45,12 @@ def posts():
     posts = Posts.query.order_by('date_posted')
     return render_template('posts.html', posts=posts)
 
-@app.route('/post/<slug>')
-def post_detail(slug):
+@app.route('/posts/<slug>')
+def post(slug):
     print(slug, flush=True)
     post = Posts.query.filter_by(slug=slug).first()
     
-    return render_template('detail_post.html', post=post)
+    return render_template('post.html', post=post)
 
 @app.route('/add-post', methods=['GET', 'POST'])
 def add_post():
@@ -73,6 +73,41 @@ def add_post():
 
     # redirect
     return render_template('add_post.html', form=form)
+
+@app.route('/post/edit/<slug>', methods=['GET', 'POST'])
+def edit(slug):
+    form = PostForm()
+    post_to_update = Posts.query.filter_by(slug=slug).first()
+    print(post_to_update.content, flush=True)
+    if request.method == 'POST':
+        post_to_update.title = request.form['title']
+        post_to_update.slug = request.form['slug']
+        post_to_update.author = request.form['author']
+        post_to_update.content = request.form['content']
+        try:
+            db.session.commit()
+            flash('Post updated')
+            return render_template('edit_post.html', form=form, post_to_update=post_to_update)
+        except:
+            flash('failed')
+            return render_template('edit_post.html', form=form, post_to_update=post_to_update)
+    else:
+        return render_template('edit_post.html', form=form, post_to_update=post_to_update)
+
+@app.route('/posts/delete/<slug>')
+def delete_post(slug):
+    print('asldfkasdlfk asdflk asdflkasdj flasd', flush=True)
+    post_to_delete = Posts.query.filter_by(slug=slug).first()
+    print('hjtryjrtyjrtyjrtyj rtyj', flush=True)
+    try:
+        db.session.delete(post_to_delete)
+        db.session.commit()
+        flash('Post deleted')
+        posts = Posts.query.order_by('date_posted')
+        return render_template('posts.html', posts=post)
+    except:
+        flash('Could not delete')
+        return render_template('posts.html', posts=posts)
 
 @app.route('/date')
 def get_current_date():

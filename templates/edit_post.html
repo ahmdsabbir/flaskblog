@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Update post{% endblock %}
+
+{% block content %}
+
+    {% for message in get_flashed_messages() %}
+        {{ message }}
+    {% endfor %}
+
+
+    <h1>Update post</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.title.label}}
+        {{ form.title(value=post_to_update.title) }} <br><br>
+        {{ form.slug.label}}
+        {{ form.slug(value=post_to_update.slug) }}<br><br>
+        {{ form.author.label}}
+        {{ form.author(value=post_to_update.author) }}<br><br>
+        {{ form.content.label}}
+        <textarea name="content" id="content" cols="30" rows="10">{{ post_to_update.content }}</textarea> <br><br>
+        {{ form.submit() }}
+        
+    </form>
+
+
+{% endblock %}

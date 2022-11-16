@@ -20,9 +20,11 @@
             </small>
             <hr>
             <p>
-                {{ post.content }}
+                {{ post.content|safe }}
             </p>
-            <a href="{{ url_for('post_detail', slug=post.slug) }}">read</a>
+            <a href="{{ url_for('post', slug=post.slug) }}">read</a>
+            <a href="{{ url_for('edit', slug=post.slug) }}">edit</a>
+            <a href="{{ url_for('delete_post', slug=post.slug) }}">delete</a>
         </div>
 
     {% endfor %}

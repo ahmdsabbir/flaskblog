@@ -13,7 +13,7 @@
         </small>
         <hr>
         <p>
-            {{ post.content }}
+            {{ post.content|safe }}
         </p>
     </div>
     <a href="{{ url_for('posts') }}">[go back]</a>
