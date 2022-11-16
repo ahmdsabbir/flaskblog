@@ -8,26 +8,38 @@
         {{ message }}
     {% endfor %}
 
-    {% if name %}
-        <h1>Update User</h1>
-        {% for user in our_users %}
-            {{ user.id}}. {{ user.name}} - {{ user.email }} - favorite color: {{ user.favorite_color }}
-            <br />
-        {% endfor %}
+    {% if id==current_user.id %}
+    <h1>Update User</h1>
+    id to update: {{ id }}
+    curr: {{ current_user.id }}
+    <br />
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        {{ form.name.label}}
+        {{ form.name(value=user_to_update.name) }}
+        <br><br>
+
+        {{ form.email.label}}
+        {{ form.email(value=user_to_update.email) }}
+        <br><br>
+        
+        {{ form.username.label}}
+        {{ form.username(value=user_to_update.username) }}
+        <br><br>
+        
+        {{ form.favorite_color.label}}
+        {{ form.favorite_color(value=user_to_update.favorite_color) }}
+        <br><br>
+        
+        {{ form.submit() }}
+        
+        <a href="{{ url_for('delete', id=user_to_update.id )}}">[delete]</a>
+    </form>
+
     {% else %}
-        <h1>Update User</h1>
-        <br />
-        <form method="POST">
-            {{ form.hidden_tag() }}
-            {{ form.name.label}}
-            {{ form.name(value=user_to_update.name) }}
-            {{ form.email.label}}
-            {{ form.email(value=user_to_update.email) }}
-            {{ form.favorite_color.label}}
-            {{ form.favorite_color(value=user_to_update.favorite_color) }}
-            {{ form.submit() }}
-            <a href="{{ url_for('delete', id=id )}}">[delete]</a>
-        </form>
+        You are not authorized to do this action
     {% endif %}
+
 
 {% endblock %}

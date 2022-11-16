@@ -2,7 +2,14 @@
     <a href="{{ url_for('index') }}">[home]</a>
     <a href="{{ url_for('profile',name='emma') }}">[profile]</a>
     <a href="{{ url_for('name') }}">[your name]</a>
-    <a href="{{ url_for('add_user') }}">[add a user]</a>
     <a href="{{ url_for('posts') }}">[posts]</a>
     <a href="{{ url_for('add_post') }}">[write]</a>
+    <a href="{{ url_for('add_user') }}">[add a user]</a>
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('logout') }}">[logout]</a>
+        <a href="{{ url_for('dashboard') }}">[dashboard]</a>
+    {% else %}
+        <a href="{{ url_for('login') }}">[login]</a>
+        <a href="{{ url_for('add_user') }}">[register]</a>
+    {% endif %}
 </header>

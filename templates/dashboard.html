@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+    {% for message in get_flashed_messages() %}
+        {{ message }}
+    {% endfor %}
+ 
+    <h1>Dashboard</h1>
+    <h2>User Info</h2>
+
+    <p><strong>Name: </strong>{{ current_user.name }}</p>
+    <p><strong>Email: </strong>{{ current_user.email }}</p>
+    <p><strong>Username: </strong>{{ current_user.username }}</p>
+    <p><strong>Favorite Color: </strong>{{ current_user.favorite_color }}</p>
+    <p><strong>Member Since: </strong>{{ current_user.date_added }}</p>
+
+    <a href="{{ url_for('logout') }}">log out</a>
+    <a href="{{ url_for('update', id=current_user.id )}}">[update]</a>
+    <a href="{{ url_for('delete', id=current_user.id )}}">[delete]</a>
+
+
+{% endblock %}

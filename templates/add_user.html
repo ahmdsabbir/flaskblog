@@ -5,42 +5,48 @@
 {% block content %}
 
     {% for message in get_flashed_messages() %}
-    {{ message }}
+        {{ message }}
     {% endfor %}
 
-    {% if name %}
-        <h1>User List</h1>
-        {% for user in our_users %}
-            {{ user.id}}. <a href="{{ url_for('update', id=user.id) }}">{{ user.name}}</a> - {{ user.email }} - {{ user.email }} - {{ user.favorite_color }} - <a href="{{ url_for('update', id=user.id) }}">[delete]</a>
-            <br />
-        {% endfor %}
-    {% else %}
+    
         <h1>User List</h1>
         <br />
+        {% for user in our_users %}
+            {{ user.id }}. <a href="{{ url_for('update', id=user.id) }}" title="update">{{ user.name }}</a> - {{ user.email }} - {{ user.username }} - {{ user.favorite_color }} - <a href="{{ url_for('delete', id=user.id) }}">[delete]</a>
+            <br />
+        {% endfor %}
+        <h2>Create New User</h2>
         <form method="POST">
             {{ form.hidden_tag() }}
+
             {{ form.name.label}}
             {{ form.name() }}
+            <br><br>
+
+            {{ form.username.label}}
+            {{ form.username() }}
             <br /><br />
+
             {{ form.email.label}}
             {{ form.email() }}
             <br /><br />
+
             {{ form.password_hash.label}}
             {{ form.password_hash() }}
             <br /><br />
+
             {{ form.password_hash_confirm.label}}
             {{ form.password_hash_confirm() }}
             <br /><br />
+
             {{ form.favorite_color.label}}
             {{ form.favorite_color() }}
             <br /><br />
+
             {{ form.submit() }}
         </form>
         <hr />
-        {% for user in our_users %}
-            {{ user.id }}. <a href="{{ url_for('update', id=user.id) }}" title="update">{{ user.name }}</a> - {{ user.email }} - {{ user.favorite_color }} - <a href="{{ url_for('delete', id=user.id) }}">[delete]</a>
-            <br />
-        {% endfor %}
-    {% endif %}
+        
+    
 
 {% endblock %}

@@ -1,3 +1,16 @@
+html {
+    font-family: 'Trebuchet MS', Arial, sans-serif, Arial, Helvetica, sans-serif;
+    color: #021b0f;
+}
+a {
+    color: #05a88d;
+}
+a:visited {
+    color: #05a88d;
+}
+a:hover {
+    color: #064137;
+}
 body > header {
     grid-area: h;
 }
@@ -19,7 +32,7 @@ body {
     "f f f f f f f"
     ;
     grid-gap: 1rem;
-    background-color: rgb(238, 243, 248);
+    background-color: rgb(237, 245, 245);
 }
 body > * {
     padding: 1rem;
