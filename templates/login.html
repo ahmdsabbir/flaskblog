@@ -5,7 +5,9 @@
 {% block content %}
 
     {% for message in get_flashed_messages() %}
-    {{ message }}
+        <div class="alert">    
+            {{ message }}
+        </div>
     {% endfor %}
 
  
@@ -13,16 +15,24 @@
     <br />
     <form method="POST">
         {{ form.hidden_tag() }}
-
-        {{ form.username.label}}
-        {{ form.username() }}
-        <br /><br />
-
-        {{ form.password.label}}
-        {{ form.password() }}
-        <br /><br />
-
-        {{ form.submit() }}
+        <div class="form-container">
+            <div class="form-label">
+                {{ form.username.label}}
+            </div>
+            <div class="form-field">
+                {{ form.username() }}
+            </div>
+            <div class="form-label">
+                {{ form.password.label }}
+            </div>
+            <div class="form-field">
+                {{ form.password() }}
+            </div>
+            <div class="form-field">
+                {{ form.submit(class='submit') }}
+            </div>
+        </div>
+            
     </form>
 
 

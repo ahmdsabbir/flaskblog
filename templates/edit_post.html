@@ -5,24 +5,44 @@
 {% block content %}
 
     {% for message in get_flashed_messages() %}
-        {{ message }}
+        <div class="alert">
+            {{ message }}
+            <br />
+            <a href="{{ url_for('post', slug=post_to_update.slug) }}">view your post</a>
+        </div>
     {% endfor %}
 
 
     <h1>Update post</h1>
     <form method="POST">
         {{ form.hidden_tag() }}
-        {{ form.title.label}}
-        {{ form.title(value=post_to_update.title) }} <br><br>
-        {{ form.slug.label}}
-        {{ form.slug(value=post_to_update.slug) }}<br><br>
-        {{ form.author.label}}
-        {{ form.author(value=post_to_update.author) }}<br><br>
-        {{ form.content.label}}
-        <textarea name="content" id="content" cols="30" rows="10">{{ post_to_update.content }}</textarea> <br><br>
-        {{ form.submit() }}
-        
+        <div class="form-container">
+            <div class="form-label">
+                {{ form.title.label}}
+            </div>
+            <div class="form-field">
+                {{ form.title(value=post_to_update.title) }}
+            </div>
+            <div class="form-label">
+                {{ form.slug.label}}
+            </div>
+            <div class="form-field">
+                {{ form.slug(value=post_to_update.slug) }}
+            </div>
+            <div class="form-label">
+                {{ form.content.label}}
+            </div>
+            <div class="form-field">
+                <textarea name="content" id="content">{{ post_to_update.content }}</textarea>
+            </div>
+            <div class="form-field">
+                {{ form.submit(class="submit") }}
+            </div>
+        </div>
+
     </form>
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='content')}}
 
 
 {% endblock %}

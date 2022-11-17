@@ -1,47 +1,147 @@
+
+*::before,
+*::after {
+    padding   : 0;
+    margin    : 0;
+    box-sizing: inherit;
+}
+
+:root {
+    --primary: #32ac73;
+    --secondary: #ffa504;
+    --bg-light: rgb(238, 241, 241);
+}
+
 html {
-    font-family: 'Trebuchet MS', Arial, sans-serif, Arial, Helvetica, sans-serif;
     color: #021b0f;
-}
-a {
-    color: #05a88d;
-}
-a:visited {
-    color: #05a88d;
-}
-a:hover {
-    color: #064137;
-}
-body > header {
-    grid-area: h;
-}
-body > main {
-    grid-area: m;
-}
+    font-family: 'Trebuchet MS', Arial, sans-serif, Arial, Helvetica, sans-serif;
+    line-height             : 1.5; /* 1 */
+    text-size-adjust        : 100%; /* 2 */
+    text-rendering          : optimizeLegibility;  
+    -moz-osx-font-smoothing : grayscale; /* only workds on mack os */
+    -webkit-font-smoothing  : antialiased;  /* only workds on mack os */
+    box-sizing              : border-box;
+  }
 
-body > aside {
-    grid-area: a;
-}
-body > footer {
-    grid-area: f;
-}
-body {
+  body {
     display: grid;
-    grid-template-areas:
-    "h h h h h h h"
-    ". m m m a a ."
-    "f f f f f f f"
-    ;
-    grid-gap: 1rem;
-    background-color: rgb(237, 245, 245);
+    grid-template-columns: 1fr;
+    gap: 1ram;
+  }
+  header {grid-column: 1/-1;}
+  main {grid-column: 1/-1;}
+  header {grid-column: 1/-1;}
+  header {grid-column: 1/-1;}
+
+  
+
+
+  @media only screen and (min-width: 860px) {
+    body {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: repeat(5, minmax(10rem, 1fr));
+    }
+    header, footer {
+        grid-column: 1/-1;
+    }
+    main {
+        grid-column: 2/4 ;
+        min-height: 80vh;
+    }
+    aside {
+        grid-column: 4/5;
+    }
+        
+  }
+
+/** header **/
+header > nav {
+    background-color: var(--bg-light);
+    padding: 1rem .75rem;
 }
-body > * {
-    padding: 1rem;
-    background-color: rgb(246, 248, 250);
+header > nav > a {
+    text-decoration: none;
+    color: var(--primary)
+}
+header > nav > a:hover,
+header > nav > a:focus {
+    color: var(--secondary)
 }
 
 
-.post {
-    border-top: 1px solid rgb(246, 248, 250);
-    border-bottom: 1px solid rgb(241, 245, 245);
-    padding: 1rem;
+
+
+/** forms **/
+.form-container {
+    display: grid;
+    row-gap: 1rem;
+    grid-template-columns: 1fr 2fr;
 }
+.form-container > .form-label {
+    grid-column: 1/2;
+    border-top: 1px solid #dddddd;
+}
+.form-container > .form-field {
+    grid-column: 2/3;
+}
+
+.form-container > .form-field > input,
+.form-container > .form-field > textarea
+ { 
+    padding: 7px;
+    font-size: 16px;
+    background: #fbfbfb;
+    border: 1px solid #dddddd;
+    height: 18px;
+    width: 100%;
+    /* box-shadow: 0 0 0 1px #dddddd, 0 2px 4px 0 rgb(0 0 0 / 7%), 0 1px 1.5px 0 rgb(0 0 0 / 5%); */
+}
+.form-container > .form-field > textarea {
+    height: auto;
+}
+
+.form-container > .form-field > input:focus{
+    outline: 2px solid #000;
+}
+
+.form-container > .form-label > .submit,
+.form-container > .form-field > .submit,
+.form-container > .submit
+{
+    
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    height: 36px;
+    line-height: 34px;
+    font-size: 14px;
+    color: #241c15;
+    background-color: var(--primary);
+    color: white;
+    transition: background-color 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0s;
+    padding: 0 18px;
+    
+}
+.form-container > .form-label > .submit:hover,
+.form-container > .form-field > .submit:hover,
+.form-container > .submit:hover
+{
+    color: #241c15;
+    background-color: #d9d7cd;
+}
+
+
+.alert {
+    border-left: 3px solid #53b6cf;
+    padding: 1rem 1.5rem;
+    background-color: rgb(238, 238, 241);
+    color: rgb(182, 142, 97);
+}
+span.marker {
+    background-color: #73cce2;
+}
+

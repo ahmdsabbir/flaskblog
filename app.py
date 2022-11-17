@@ -4,13 +4,14 @@ from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, date
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-
-from forms import PostForm, UserForm, NamerForm, PasswordForm, LoginForm
+from flask_ckeditor import CKEditor
+from forms import PostForm, UserForm, NamerForm, PasswordForm, LoginForm, SearchForm
 
 
 # Flask instance
 app = Flask(__name__)
-
+# add ck editor
+ckeditor = CKEditor(app)
 app.config['SECRET_KEY'] = "my super secret key that no one else knows"
 # # old sqllite db
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -29,6 +30,25 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(int(user_id))
+
+@app.context_processor
+def base():
+    form = SearchForm()
+    return dict(form=form)
+
+# search function
+@app.route('/search', methods=['GET','POST'])
+def search():
+    form = SearchForm()
+    posts = Posts.query
+    if request.method == 'POST':
+        post.searched = form.searched.data
+        posts = posts.filter(Posts.content.like('%' + post.searched + '%'))
+        posts = posts.order_by(Posts.title).all()
+        return render_template('search.html', form=form, searched=post.searched, posts=posts)
+    else:
+        return 'not validated'
+
 
 # create login page
 @app.route('/login', methods=['GET', 'POST'])
@@ -81,8 +101,8 @@ def add_post():
     form = PostForm()
 
     if form.validate_on_submit():
-        
-        post = Posts(title=form.title.data, content=form.content.data, author=form.author.data, slug=form.slug.data)
+        poster = current_user.id
+        post = Posts(title=form.title.data, content=form.content.data, poster_id=poster, slug=form.slug.data)
         
         # clear the form
         form.title.data = ''
@@ -103,38 +123,46 @@ def add_post():
 def edit(slug):
     form = PostForm()
     post_to_update = Posts.query.filter_by(slug=slug).first()
-    print(post_to_update.content, flush=True)
-    if request.method == 'POST':
+    if (request.method == 'POST'):
         post_to_update.title = request.form['title']
         post_to_update.slug = request.form['slug']
-        post_to_update.author = request.form['author']
+        # post_to_update.author = request.form['author']
         post_to_update.content = request.form['content']
         try:
             db.session.commit()
             flash('Post updated')
             return render_template('edit_post.html', form=form, post_to_update=post_to_update)
         except:
-            flash('failed')
+            flash('Update failed')
             return render_template('edit_post.html', form=form, post_to_update=post_to_update)
     else:
-        return render_template('edit_post.html', form=form, post_to_update=post_to_update)
+        print(post_to_update.poster.id, flush=True)
+        print(current_user.id, flush=True)
+        if post_to_update.poster.id != current_user.id:        
+            flash('You can\'t update this page')
+            posts = Posts.query.order_by('date_posted')
+            return render_template('posts.html', posts=posts)
+        else:
+            return render_template('edit_post.html', form=form, post_to_update=post_to_update)
 
 @app.route('/posts/delete/<slug>')
 @login_required
 def delete_post(slug):
-    print('asldfkasdlfk asdflk asdflkasdj flasd', flush=True)
     post_to_delete = Posts.query.filter_by(slug=slug).first()
-    print('hjtryjrtyjrtyjrtyj rtyj', flush=True)
-    try:
-        db.session.delete(post_to_delete)
-        db.session.commit()
-        flash('Post deleted')
-        posts = Posts.query.order_by('date_posted')
-        return render_template('posts.html', posts=post)
-    except:
-        flash('Could not delete')
+    if post_to_delete.poster.id == current_user.id:
+        try:
+            db.session.delete(post_to_delete)
+            db.session.commit()
+            flash('Post deleted')
+            posts = Posts.query.order_by('date_posted')
+            return render_template('posts.html', posts=post)
+        except:
+            flash('Could not delete')
+            return render_template('posts.html', posts=posts)
+    else:
+        flash('You are not authorized to do that')
         return render_template('posts.html', posts=posts)
-
+    
 @app.route('/date')
 def get_current_date():
     favorite_pizza = {
@@ -182,7 +210,7 @@ def update(id):
         try:
             db.session.commit()
             flash('updated')
-            return render_template('update.html', form=form, user_to_update=user_to_update)
+            return render_template('update.html', form=form, user_to_update=user_to_update, id=user_to_update.id)
         except:
             flash('failed')
             return render_template('update.html', form=form, user_to_update=user_to_update)
@@ -263,6 +291,8 @@ class Users(db.Model, UserMixin):
     favorite_color = db.Column(db.String(120))
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     password_hash = db.Column(db.String(128))
+    # users can have many posts
+    posts = db.relationship('Posts', backref='poster')
 
     @property
     def password(self):
@@ -278,9 +308,6 @@ class Users(db.Model, UserMixin):
     def __repr__(self):
         return f'<Name {self.name}>'
 
-
-
-
 # Blog Post Model
 class Posts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -289,6 +316,8 @@ class Posts(db.Model):
     author = db.Column(db.String(255))
     date_posted = db.Column(db.DateTime, default=datetime.utcnow)
     slug = db.Column(db.String(255))
+    # foreign key to link Users (refer to Primary key)
+    poster_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 
 

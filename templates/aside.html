@@ -1,0 +1,15 @@
+<aside>
+    <h3>Quick Search</h3>
+    
+    <form method="POST" action="{{ url_for('search') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-container">
+            <div class="form-label">
+                <button type="submit" class="submit">Go</button>
+            </div>
+            <div class="form-field">
+                <input type="searched" name="searched">
+            </div>
+        </div>
+    </form>
+</aside>

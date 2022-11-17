@@ -8,7 +8,7 @@
         {{ message }}
     {% endfor %}
 
-    
+        
         <h1>User List</h1>
         <br />
         {% for user in our_users %}
@@ -17,33 +17,38 @@
         {% endfor %}
         <h2>Create New User</h2>
         <form method="POST">
-            {{ form.hidden_tag() }}
+            <div class="form-container">
 
-            {{ form.name.label}}
-            {{ form.name() }}
-            <br><br>
+                {{ form.hidden_tag() }}
+                
+                <div class="form-label">{{ form.name.label}}</div>
+                <div class="form-field">{{ form.name() }}</div>
+                
 
-            {{ form.username.label}}
-            {{ form.username() }}
-            <br /><br />
-
-            {{ form.email.label}}
-            {{ form.email() }}
-            <br /><br />
-
-            {{ form.password_hash.label}}
-            {{ form.password_hash() }}
-            <br /><br />
-
-            {{ form.password_hash_confirm.label}}
-            {{ form.password_hash_confirm() }}
-            <br /><br />
-
-            {{ form.favorite_color.label}}
-            {{ form.favorite_color() }}
-            <br /><br />
-
-            {{ form.submit() }}
+                <div class="form-label">{{ form.username.label}}</div>
+                <div class="form-field">{{ form.username() }}</div>
+                
+                
+                <div class="form-label">{{ form.email.label}}</div>
+                <div class="form-field">{{ form.email() }}</div>
+                
+                
+                <div class="form-label">{{ form.password_hash.label}}</div>
+                <div class="form-field">{{ form.password_hash() }}</div>
+                
+                
+                <div class="form-label">{{ form.password_hash_confirm.label}}</div>
+                <div class="form-field">{{ form.password_hash_confirm() }}</div>
+                
+                
+                <div class="form-label">{{ form.favorite_color.label}}</div>
+                <div class="form-field">{{ form.favorite_color() }}</div>
+                
+                <div class="form-field">{{ form.submit(class='submit') }}</div>
+                
+                
+                
+            </div>
         </form>
         <hr />
         

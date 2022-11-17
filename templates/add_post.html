@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+
 {% block title %}Add User{% endblock %}
 
 {% block content %}
@@ -12,20 +13,33 @@
         <h1>Create Post</h1>
         <form method="POST">
             {{ form.hidden_tag() }}
-            {{ form.title.label}}
-            {{ form.title() }}
-            <br /><br />
-            {{ form.author.label}}
-            {{ form.author() }}
-            <br /><br />
-            {{ form.slug.label}}
-            {{ form.slug() }}
-            <br /><br />
-            {{ form.content.label}}
-            {{ form.content(rows="5") }}
-            <br /><br />
-            {{ form.submit() }}
+
+            <div class="form-container">
+                <div class="form-label">
+                    {{ form.title.label}}
+                </div>
+                <div class="form-field">
+                    {{ form.title() }}
+                </div>
+                <div class="form-label">
+                    {{ form.slug.label}}
+                </div>
+                <div class="form-field">
+                    {{ form.slug() }}
+                </div>
+                <div class="form-label">
+                    {{ form.content.label}}
+                </div>
+                <div class="form-field">
+                    {{ form.content() }}
+                </div>
+                <div class="form-field">
+                    {{ form.submit(class='submit') }}
+                </div>
+            </div>    
         </form>
-        <hr />
+        {{ ckeditor.load() }}
+        {{ ckeditor.config(name='content')}}
+
 
 {% endblock %}
