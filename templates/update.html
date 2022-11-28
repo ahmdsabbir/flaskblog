@@ -15,24 +15,22 @@
     <br />
     <form method="POST">
         {{ form.hidden_tag() }}
-
-        {{ form.name.label}}
-        {{ form.name(value=user_to_update.name) }}
-        <br><br>
-
-        {{ form.email.label}}
-        {{ form.email(value=user_to_update.email) }}
-        <br><br>
+        <div class="form-container">
+            <div class="form-label">{{ form.name.label}}</div>
+            
+            <div class="form-field">{{ form.name(value=user_to_update.name) }}</div>
+            <div class="form-label">{{ form.email.label}}</div>
+            <div class="form-field">{{ form.email(value=user_to_update.email) }}</div>
+            <div class="form-label">{{ form.username.label}}</div>
+            <div class="form-field">{{ form.username(value=user_to_update.username) }}</div>
+            <div class="form-label">{{ form.favorite_color.label}}</div>
+            <div class="form-field">{{ form.favorite_color(value=user_to_update.favorite_color) }}</div>
+            <div class="form-label">{{ form.about_author.label}}</div>
+            <div class="form-field"><textarea name="about_author" id="about_author">{{ user_to_update.about_author }}</textarea></div>
+            <div class="form-field">{{ form.submit(class="submit") }}</div>
+        </div>
         
-        {{ form.username.label}}
-        {{ form.username(value=user_to_update.username) }}
-        <br><br>
         
-        {{ form.favorite_color.label}}
-        {{ form.favorite_color(value=user_to_update.favorite_color) }}
-        <br><br>
-        
-        {{ form.submit() }}
         
         <a href="{{ url_for('delete', id=user_to_update.id )}}">[delete]</a>
         

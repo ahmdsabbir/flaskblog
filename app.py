@@ -118,6 +118,13 @@ def add_post():
     # redirect
     return render_template('add_post.html', form=form)
 
+@app.route('/api/<name>')
+def api(name):
+    return {
+        'hi': 'hello',
+        name: name,
+    }
+
 @app.route('/post/edit/<slug>', methods=['GET', 'POST'])
 @login_required
 def edit(slug):
@@ -288,7 +295,8 @@ class Users(db.Model, UserMixin):
     name = db.Column(db.String(200), nullable=False)
     username = db.Column(db.String(20), nullable=False, unique=True)
     email = db.Column(db.String(200), nullable=False, unique=True)
-    favorite_color = db.Column(db.String(120))
+    favorite_color = db.Column(db.Text(120))
+    about_author = db.Column(db.String(220), nullable=True)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     password_hash = db.Column(db.String(128))
     # users can have many posts

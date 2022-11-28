@@ -16,17 +16,18 @@
                 {{ post.title }}
             </h2>
             <small>
-                {{ post.date_posted }} by {{ post.poster.name }}
+                Posted on {{ post.date_posted }} by {{ post.poster.name }}
             </small>
-            <hr>
+            <br>
             <a href="{{ url_for('post', slug=post.slug) }}">read</a>
             
             {# show this only if current user is the poster #}
             {% if post.poster.id==current_user.id %}
-                <a href="{{ url_for('edit', slug=post.slug) }}">edit</a>
-                <a href="{{ url_for('delete_post', slug=post.slug) }}">delete</a>
+            <a href="{{ url_for('edit', slug=post.slug) }}">edit</a>
+            <a href="{{ url_for('delete_post', slug=post.slug) }}">delete</a>
             {% endif %}
         </div>
+        <hr>
 
     {% endfor %}
 {% endblock %}

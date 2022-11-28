@@ -17,6 +17,7 @@ class UserForm(FlaskForm):
     password_hash = PasswordField('Password', validators=[DataRequired(), EqualTo('password_hash_confirm', message='Passwords Must Match')])
     password_hash_confirm = PasswordField('Confirm Password', validators=[DataRequired()])
     favorite_color = StringField('Favorite Color')
+    about_author = TextAreaField('About yourself')
     submit = SubmitField('Submit')
 
 class NamerForm(FlaskForm):

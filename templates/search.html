@@ -6,12 +6,16 @@
 
     <h1>Search Page</h1>
     <p>You searched for: <strong>{{ searched }}</strong></p>
-    Result:<br />
-    {% for post in posts %}
-        <a href="{{ url_for('post', slug=post.slug) }}">
-            {{ post.title }} 
-        </a>
-        <br>
-    {% endfor %}
+    {% if posts %}
+        Result:<br />
+        {% for post in posts %}
+            <a href="{{ url_for('post', slug=post.slug) }}">
+                {{ post.title }} 
+            </a>
+            <br>
+        {% endfor %}
+    {% else %}
+        But, no results were found
+    {% endif %}
 
 {% endblock %}

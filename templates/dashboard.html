@@ -10,11 +10,12 @@
  
     <h1>Dashboard</h1>
     <h2>User Info</h2>
-
+    <img src="{{ url_for('static', filename='img/profile_photo.png') }}" alt="{{ current_user.name }}" height="200" width="200" style="border-radius: 100px;">
     <p><strong>Name: </strong>{{ current_user.name }}</p>
     <p><strong>Email: </strong>{{ current_user.email }}</p>
     <p><strong>Username: </strong>{{ current_user.username }}</p>
     <p><strong>Favorite Color: </strong>{{ current_user.favorite_color }}</p>
+    <p><strong>About The Author: </strong>{{ current_user.about_author }}</p>
     <p><strong>Member Since: </strong>{{ current_user.date_added }}</p>
 
     <a href="{{ url_for('logout') }}">log out</a>
@@ -22,4 +23,4 @@
     <a href="{{ url_for('delete', id=current_user.id )}}">[delete]</a>
 
 
-{% endblock %}
+{% endblock %} 
