@@ -34,7 +34,10 @@ def load_user(user_id):
 @app.context_processor
 def base():
     form = SearchForm()
-    return dict(form=form)
+    return dict(
+        form=form,
+        current_user=current_user,
+    )
 
 # search function
 @app.route('/search', methods=['GET','POST'])
@@ -184,6 +187,7 @@ def get_current_date():
 
 
 @app.route('/user/add', methods=['GET', 'POST'])
+@login_required
 def add_user():
     name = None
     form = UserForm()
@@ -214,6 +218,8 @@ def update(id):
         user_to_update.email = request.form['email']
         user_to_update.username = request.form['username']
         user_to_update.favorite_color = request.form['favorite_color']
+        user_to_update.about_author = request.form['about_author']
+        user_to_update.profile_pic = request.files['profile_pic']
         try:
             db.session.commit()
             flash('updated')
@@ -245,7 +251,10 @@ def index():
 
 @app.route('/user/<name>')
 def profile(name):
-    return render_template('user.html', name=name)
+    user = Users.query.filter_by(username=name).first()
+    print(user.id)
+    posts = user.posts
+    return render_template('user.html', user=user, posts=posts)
 
 #invalid error
 @app.errorhandler(404)
@@ -331,4 +340,4 @@ class Posts(db.Model):
 
 # initiate
 if __name__ == "__main__":
-    app.run(debug=True, port=8000)
+    app.run(debug=True, host="0.0.0.0", port=8000)

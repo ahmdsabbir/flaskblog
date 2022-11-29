@@ -116,8 +116,8 @@ header > nav > a:focus {
     font-family: inherit;
     border: 1px solid transparent;
     border-radius: 2px;
-    height: 36px;
-    line-height: 34px;
+    height: 34px;
+    line-height: 36px;
     font-size: 14px;
     color: #241c15;
     background-color: var(--primary);

@@ -16,7 +16,7 @@
                 {{ post.title }}
             </h2>
             <small>
-                Posted on {{ post.date_posted }} by {{ post.poster.name }}
+                Posted on {{ post.date_posted }} by <a href="{{ url_for('profile', name=post.poster.username) }}">{{ post.poster.name }}</a>
             </small>
             <br>
             <a href="{{ url_for('post', slug=post.slug) }}">read</a>

@@ -13,7 +13,7 @@
     {% if id==current_user.id %}
     <h1>Update User</h1>
     <br />
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div class="form-container">
             <div class="form-label">{{ form.name.label}}</div>
@@ -27,6 +27,8 @@
             <div class="form-field">{{ form.favorite_color(value=user_to_update.favorite_color) }}</div>
             <div class="form-label">{{ form.about_author.label}}</div>
             <div class="form-field"><textarea name="about_author" id="about_author">{{ user_to_update.about_author }}</textarea></div>
+            <div class="form-label">{{ form.profile_pic.label}}</div>
+            <div class="form-field">{{ form.profile_pic(value=user_to_update.profile_pic) }}</div>
             <div class="form-field">{{ form.submit(class="submit") }}</div>
         </div>
         

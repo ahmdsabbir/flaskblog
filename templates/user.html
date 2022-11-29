@@ -4,6 +4,40 @@
 
 {% block content %}
 
-<h1>hello {{ name|title }}</h1>
+<h1>User Info</h1>
+
+<blockquote>
+    <p>
+        {{ user.name }} is a member since {{ user.date_added }} and loves the color {{ user.favorite_color }}. This is the user's tagline: <u>{{ user.about_author }}</u>. 
+    </p>
+    <p>
+        <em>email the user: {{ user.email }}</em>
+    </p>
+</blockquote>
+
+<h2>Authored Posts</h2>
+{% if posts %}
+
+    {% for post in posts %}
+
+        <div class="post">
+            <h3>
+                {{ post.title }}
+            </h3>
+            <a href="{{ url_for('post', slug=post.slug) }}">read</a>
+            
+            {# show this only if current user is the poster #}
+            {% if post.poster.id==current_user.id %}
+            <a href="{{ url_for('edit', slug=post.slug) }}">edit</a>
+            <a href="{{ url_for('delete_post', slug=post.slug) }}">delete</a>
+            {% endif %}
+        </div>
+        <hr>
+
+    {% endfor %}
+
+{% else %}
+    user has not authored any posts
+{% endif %}
 
 {% endblock %}
